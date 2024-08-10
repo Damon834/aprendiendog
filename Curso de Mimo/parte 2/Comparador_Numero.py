@@ -1,6 +1,6 @@
 # Para comparar si un numero es menor que otro numero utilizamos el operador menor que <
 
-1 < 90
+print (1 < 90)
 
 # Si el numero de la izquierda es menor que el numero de la derecha, como en 1 < 235, el resultado es True
 
