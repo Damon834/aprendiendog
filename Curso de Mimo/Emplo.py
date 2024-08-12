@@ -1,5 +1,5 @@
-age = input (" escribvir tu edad :") 
-if (int(age) < 21) : 
-    print (" under 21")
+a = 5
+if a > 3:
+    print("a es mayor que 3")
 else:
-    print("21 or older")
+    print("a es menor o igual que 3")
