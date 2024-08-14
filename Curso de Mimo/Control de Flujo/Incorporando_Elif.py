@@ -69,3 +69,39 @@ elif edad <= 16:
 
 elif edad < 100:
     print ("Welcome")
+
+# Ejemplo
+
+number_pressed = 2
+massage = ""
+
+if number_pressed == 1:
+    print ("To hear store hours")
+
+elif number_pressed == 2:
+    print ("To talk to a manager")
+
+elif number_pressed == 3:
+    print ("To record a message")
+
+elif number_pressed == 4:
+    print ("To hear again")
+
+else:
+    print ("Invalid optiion")
+
+
+# Ejemplo 2
+
+greeting = "Good afternoon"
+
+if greeting == "Good morning":
+    response = "Good morning"
+
+elif greeting == "Good afternoon":
+    response = "Good afternoon"
+
+else:
+    response = "Hello"
+
+print (response)

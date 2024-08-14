@@ -1,5 +1,13 @@
-a = 5
-if a > 3:
-    print("a es mayor que 3")
+
+greeting = "Good afternoon"
+
+if greeting == "Good morning":
+    response = "Good morning"
+
+elif greeting == "Good afternoon":
+    response = "Good afternoon"
+
 else:
-    print("a es menor o igual que 3")
+    response = "Hello"
+
+print (response)
