@@ -1,3 +1,7 @@
-#Escribir un programa que muestre por pantalla el resultado de la siguiente operación aritmética 
+#Escribe un programa que verifique si un número es mayor que 5.
 
-print (((3 + 2) / (2 * 5)) ** 2)
+numero = 7
+if numero > 5:
+    print ("El numero es mayor que 5")
+else:
+    print ("El numero es menor que 5")
