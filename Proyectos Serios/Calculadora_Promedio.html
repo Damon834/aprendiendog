@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Índice Académico</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .input-section {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 8px 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            flex: 2;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #e8f4f8;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .formula-display {
+            background: #f39c12;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .excel-instructions {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .excel-instructions h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Calculadora de Índice Académico</h1>
+
+        <div class="excel-instructions">
+            <h3>🔥 Instrucciones para Excel:</h3>
+            <p><strong>Fórmula para el Índice Académico:</strong> <code>=SUMPRODUCT(B:B,C:C)/SUM(C:C)</code></p>
+            <p><strong>Columna A:</strong> Nombre de la Materia | <strong>Columna B:</strong> Calificación |
+                <strong>Columna C:</strong> Créditos</p>
+            <p><strong>Columna D:</strong> Fórmula <code>=B2*C2</code> (Calificación × Créditos)</p>
+        </div>
+
+        <div class="input-section">
+            <h3>➕ Agregar Nueva Materia</h3>
+            <div class="input-row">
+                <input type="text" id="nombreMateria" placeholder="Nombre de la Materia" />
+                <input type="number" id="calificacion" placeholder="Calificación" min="0" max="10" step="0.1" />
+                <input type="number" id="creditos" placeholder="Créditos" min="0" max="10" step="1" />
+                <button onclick="agregarMateria()">Agregar Materia</button>
+            </div>
+        </div>
+
+        <div class="formula-display">
+            <strong>Fórmula:</strong> Índice Académico = Σ(Calificaciones × Créditos) ÷ Σ(Créditos)
+        </div>
+
+        <table id="tablaMaterias">
+            <thead>
+                <tr>
+                    <th>MATERIAS</th>
+                    <th>CALIFICACIÓN</th>
+                    <th>CRÉDITOS</th>
+                    <th>CALIFICACIÓN × CRÉDITOS</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <!-- Las materias se agregarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <div class="summary">
+            <div class="summary-item">
+                <div>Total Calificaciones × Créditos</div>
+                <div class="summary-value" id="totalPonderado">0.0</div>
+            </div>
+            <div class="summary-item">
+                <div>Total Créditos</div>
+                <div class="summary-value" id="totalCreditos">0</div>
+            </div>
+            <div class="summary-item">
+                <div>ÍNDICE ACADÉMICO</div>
+                <div class="summary-value" id="indiceAcademico">0.00</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button onclick="limpiarTodo()" style="background: #e67e22;">🗑️ Limpiar Todo</button>
+            <button onclick="exportarExcel()" style="background: #27ae60; margin-left: 10px;">📊 Exportar a
+                Excel</button>
+        </div>
+    </div>
+
+    <script>
+        let materias = [];
+        let contadorId = 1;
+
+        // Cargar materias del ejemplo inicial
+        function cargarEjemplo() {
+            const materiasEjemplo = [
+                { nombre: "Matemáticas I", calificacion: 6.9, creditos: 5 },
+                { nombre: "Dibujo I", calificacion: 5.3, creditos: 2 },
+                { nombre: "Inglés I", calificacion: 5.1, creditos: 2 },
+                { nombre: "Química", calificacion: 7.4, creditos: 3 },
+                { nombre: "Lenguaje y Comunicación I", calificacion: 7.4, creditos: 2 }
+            ];
+
+            materiasEjemplo.forEach(materia => {
+                materias.push({
+                    id: contadorId++,
+                    nombre: materia.nombre,
+                    calificacion: materia.calificacion,
+                    creditos: materia.creditos
+                });
+            });
+
+            actualizarTabla();
+            calcularIndice();
+        }
+
+        function agregarMateria() {
+            const nombre = document.getElementById('nombreMateria').value.trim();
+            const calificacion = parseFloat(document.getElementById('calificacion').value);
+            const creditos = parseInt(document.getElementById('creditos').value);
+
+            if (!nombre || isNaN(calificacion) || isNaN(creditos) || calificacion < 0 || creditos <= 0) {
+                alert('Por favor, completa todos los campos correctamente.');
+                return;
+            }
+
+            if (calificacion > 10) {
+                alert('La calificación no puede ser mayor a 10.');
+                return;
+            }
+
+            materias.push({
+                id: contadorId++,
+                nombre: nombre,
+                calificacion: calificacion,
+                creditos: creditos
+            });
+
+            // Limpiar formulario
+            document.getElementById('nombreMateria').value = '';
+            document.getElementById('calificacion').value = '';
+            document.getElementById('creditos').value = '';
+
+            actualizarTabla();
+            calcularIndice();
+        }
+
+        function eliminarMateria(id) {
+            materias = materias.filter(materia => materia.id !== id);
+            actualizarTabla();
+            calcularIndice();
+        }
+
+        function actualizarTabla() {
+            const cuerpoTabla = document.getElementById('cuerpoTabla');
+            cuerpoTabla.innerHTML = '';
+
+            materias.forEach(materia => {
+                const fila = document.createElement('tr');
+                const ponderacion = (materia.calificacion * materia.creditos).toFixed(1);
+
+                fila.innerHTML = `
+                    <td style="text-align: left; padding-left: 15px;">${materia.nombre}</td>
+                    <td><strong>${materia.calificacion}</strong></td>
+                    <td><strong>${materia.creditos}</strong></td>
+                    <td style="background: #e8f6f3;"><strong>${ponderacion}</strong></td>
+                    <td>
+                        <button class="delete-btn" onclick="eliminarMateria(${materia.id})">
+                            🗑️ Eliminar
+                        </button>
+                    </td>
+                `;
+                cuerpoTabla.appendChild(fila);
+            });
+        }
+
+        function calcularIndice() {
+            const totalPonderado = materias.reduce((sum, materia) => sum + (materia.calificacion * materia.creditos), 0);
+            const totalCreditos = materias.reduce((sum, materia) => sum + materia.creditos, 0);
+            const indiceAcademico = totalCreditos > 0 ? totalPonderado / totalCreditos : 0;
+
+            document.getElementById('totalPonderado').textContent = totalPonderado.toFixed(1);
+            document.getElementById('totalCreditos').textContent = totalCreditos;
+            document.getElementById('indiceAcademico').textContent = indiceAcademico.toFixed(2);
+        }
+
+        function limpiarTodo() {
+            if (confirm('¿Estás seguro de que quieres eliminar todas las materias?')) {
+                materias = [];
+                actualizarTabla();
+                calcularIndice();
+            }
+        }
+
+        function exportarExcel() {
+            let csvContent = "Materia,Calificación,Créditos,Calificación x Créditos\n";
+
+            materias.forEach(materia => {
+                const ponderacion = (materia.calificacion * materia.creditos).toFixed(1);
+                csvContent += `"${materia.nombre}",${materia.calificacion},${materia.creditos},${ponderacion}\n`;
+            });
+
+            const totalPonderado = materias.reduce((sum, materia) => sum + (materia.calificacion * materia.creditos), 0);
+            const totalCreditos = materias.reduce((sum, materia) => sum + materia.creditos, 0);
+            const indiceAcademico = totalCreditos > 0 ? totalPonderado / totalCreditos : 0;
+
+            csvContent += `\n"TOTALES","","${totalCreditos}","${totalPonderado.toFixed(1)}"\n`;
+            csvContent += `"ÍNDICE ACADÉMICO","","","${indiceAcademico.toFixed(2)}"`;
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'indice_academico.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Permitir agregar materia con Enter
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarEjemplo();
+
+            document.getElementById('creditos').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    agregarMateria();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
